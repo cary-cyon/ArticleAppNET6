@@ -8,6 +8,7 @@ namespace ProjectArticle1
     public class ArticleAppContext : DbContext
     {
         public DbSet<Article> Articles { get; set; }
+        public DbSet<Author> Author { get; set; }
 
         public string DbPath { get; }
 
