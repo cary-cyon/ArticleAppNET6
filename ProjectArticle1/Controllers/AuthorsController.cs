@@ -57,12 +57,12 @@ namespace ProjectArticle1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,name")] Author author)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Author author)
         {
             _context.Add(author);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            //return View(author);
+            
         }
 
         // GET: Authors/Edit/5

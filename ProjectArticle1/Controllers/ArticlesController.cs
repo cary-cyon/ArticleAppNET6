@@ -63,9 +63,6 @@ namespace ProjectArticle1.Controllers
                 _context.Add(article);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-
-            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id", article.AuthorId);
-            return View(article);
         }
 
         // GET: Articles/Edit/5
