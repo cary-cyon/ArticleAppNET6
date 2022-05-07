@@ -9,6 +9,9 @@ namespace ProjectArticle1
     {
         public DbSet<Article> Articles { get; set; }
         public DbSet<Author> Author { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<User> Users { get; set; }
+
 
         public string DbPath { get; }
 

@@ -11,23 +11,23 @@ using ProjectArticle1.Models;
 
 namespace ProjectArticle1.Controllers
 {
-    public class AuthorsController : Controller
+    public class UsersController : Controller
     {
         private readonly ArticleAppContext _context;
 
-        public AuthorsController(ArticleAppContext context)
+        public UsersController(ArticleAppContext context)
         {
             _context = context;
-            
         }
 
-        // GET: Authors
+        // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Author.ToListAsync());
+            var articleAppContext = _context.Users.Include(u => u.Author);
+            return View(await articleAppContext.ToListAsync());
         }
 
-        // GET: Authors/Details/5
+        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,37 +35,44 @@ namespace ProjectArticle1.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var user = await _context.Users
+                .Include(u => u.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            _context.Entry(author).Collection(p => p.Articles).Load();
-            if (author == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(author);
+            return View(user);
         }
 
-        // GET: Authors/Create
+        // GET: Users/Create
         public IActionResult Create()
         {
+            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id");
             return View();
         }
 
-        // POST: Authors/Create
+        // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Author author)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Login,Password,IsAuthor,AuthorId")] User user)
         {
-            _context.Add(author);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            
+            if (ModelState.IsValid)
+            {
+                if (!user.IsAuthor)
+                    user.AuthorId = null;
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id", user.AuthorId);
+            return View(user);
         }
 
-        // GET: Authors/Edit/5
+        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,33 +80,37 @@ namespace ProjectArticle1.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author.FindAsync(id);
-            if (author == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(author);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id", user.AuthorId);
+            return View(user);
         }
 
-        // POST: Authors/Edit/5
+        // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Author author)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,IsAuthor,AuthorId")] User user)
         {
-            if (id != author.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
+
+            if (ModelState.IsValid)
+            {
                 try
                 {
-                    _context.Update(author);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -109,10 +120,12 @@ namespace ProjectArticle1.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-
+            }
+            ViewData["AuthorId"] = new SelectList(_context.Author, "Id", "Id", user.AuthorId);
+            return View(user);
         }
 
-        // GET: Authors/Delete/5
+        // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,30 +133,31 @@ namespace ProjectArticle1.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var user = await _context.Users
+                .Include(u => u.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (author == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(author);
+            return View(user);
         }
 
-        // POST: Authors/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Author.FindAsync(id);
-            _context.Author.Remove(author);
+            var user = await _context.Users.FindAsync(id);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(int id)
+        private bool UserExists(int id)
         {
-            return _context.Author.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

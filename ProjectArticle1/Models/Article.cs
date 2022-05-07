@@ -12,6 +12,8 @@ namespace ProjectArticle1.Models
 
         [ForeignKey("AuthorId")]
         public Author Author { get; set; }
+        public List<Tag> Tags { get; set; }
+        public List<Comment> Comments { get; set; }
         
     }
 }

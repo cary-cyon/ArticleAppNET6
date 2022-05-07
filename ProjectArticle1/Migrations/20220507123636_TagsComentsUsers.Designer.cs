@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectArticle1;
 
@@ -10,9 +11,10 @@ using ProjectArticle1;
 namespace ProjectArticle1.Migrations
 {
     [DbContext(typeof(ArticleAppContext))]
-    partial class ArticleAppContextModelSnapshot : ModelSnapshot
+    [Migration("20220507123636_TagsComentsUsers")]
+    partial class TagsComentsUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -119,6 +121,7 @@ namespace ProjectArticle1.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AuthorId")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsAuthor")
@@ -188,7 +191,9 @@ namespace ProjectArticle1.Migrations
                 {
                     b.HasOne("ProjectArticle1.Models.Author", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
                 });
