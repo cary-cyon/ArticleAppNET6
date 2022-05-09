@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProjectArticle1;
 
@@ -5,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddDbContext<ArticleAppContext>(options => options.UseSqlite("article.db"));
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
+        AddCookie(options => options.LoginPath = "/Home"); ;
+
 builder.Services.AddDbContext<ArticleAppContext>();
 var app = builder.Build();
 
@@ -24,7 +27,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+
+app.MapDefaultControllerRoute();
 
 app.MapControllerRoute(
     name: "default",

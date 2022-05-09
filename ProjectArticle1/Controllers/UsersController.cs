@@ -60,6 +60,7 @@ namespace ProjectArticle1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Login,Password,IsAuthor,AuthorId")] User user)
         {
+               
             if (ModelState.IsValid)
             {
                 if (!user.IsAuthor)
