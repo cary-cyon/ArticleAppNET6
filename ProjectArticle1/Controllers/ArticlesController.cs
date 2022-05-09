@@ -40,8 +40,12 @@ namespace ProjectArticle1.Controllers
             }
 
             var article = await _context.Articles
-                .Include(a => a.Author)
+                .Include(a => a.Author).Include(a => a.Comments).ThenInclude(comment => comment.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            //_context.Entry(article).Collection(p => p.Comments).Load();
+            
+            
+            
             if (article == null)
             {
                 return NotFound();

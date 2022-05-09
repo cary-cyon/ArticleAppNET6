@@ -29,6 +29,26 @@
             @Html.DisplayFor(model => model.Author.Id)
         </dd>
     </dl>
+    <dl>
+    @foreach(var comment in Model.Comments)
+    {
+
+        <li> 
+            <dl>
+                <li>
+                    @comment.User.Login
+                </li>
+                <li>
+                    @comment.Text
+                </li>
+                <li>
+
+                </li>
+            </dl>    
+        
+        </li>
+    }
+    </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
