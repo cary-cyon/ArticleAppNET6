@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectArticle1;
 using ProjectArticle1.Models;
 
+
 namespace ProjectArticle1.Controllers
 {
     public class UsersController : Controller
